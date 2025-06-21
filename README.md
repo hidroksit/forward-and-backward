@@ -68,7 +68,7 @@ Ağırlıklar her epoch sonunda güncellenir.
 
 Öğrenme oranı (learning_rate = 0.1) olarak belirlenmiştir.
 
-🏋‍♀ Eğitim Süreci
+ Eğitim Süreci
 Model 1000 epoch boyunca eğitilmiştir. Her epoch sonunda eğitim kaybı (loss) hesaplanmış ve loss vs epoch grafiği oluşturulmuştur.
 
 Eğitim Parametreleri
@@ -87,7 +87,7 @@ Eğitim sonunda (Epoch 1000): yaklaşık 0.04
 
 Kayıp eğrisi sürekli azalmış ve modelin başarıyla öğrenme gerçekleştirdiği görülmüştür.
 
-📈 Grafikte detaylı olarak gösterilmiştir:
+ Grafikte detaylı olarak gösterilmiştir:
 ![accuracy_plot](https://github.com/user-attachments/assets/fe03d63a-4f9e-4ad1-b544-66aa4678af38)
 
 
@@ -101,7 +101,7 @@ Virginica	0	0	10
 
 Toplam doğru sınıflandırma: 30 / 30
 
-📊 Görsel hali:
+ Görsel hali:
 ![confusion_matrix](https://github.com/user-attachments/assets/2774718e-f6bd-46f3-94eb-42db254660de)
 
 Test Doğruluğu (Accuracy)
@@ -132,7 +132,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 Not: scikit-learn yalnızca veri bölme, etiketleme ve değerlendirme metrikleri için kullanılmıştır. Model sıfırdan elle yazılmıştır.
 
 
-📚 Kaynakça
+ Kaynakça
 Brownlee, J. (2018). Neural Networks from Scratch in Python. Machine Learning Mastery.
 https://machinelearningmastery.com/implement-backpropagation-algorithm-scratch-python/
 
