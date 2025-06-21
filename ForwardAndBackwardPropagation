@@ -1,0 +1,101 @@
+# Gerekli kütüphaneler
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelBinarizer, MinMaxScaler
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score
+
+# 1. Veri Yükleme ve Ön İşleme
+df = pd.read_csv("dataset.csv")
+
+# Etiket kodlama (One-Hot Encoding)
+encoder = LabelBinarizer()
+y = encoder.fit_transform(df["species"])
+X = df.drop("species", axis=1).values
+
+# Özellik ölçekleme (Min-Max Normalizasyon)
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X)
+
+# Eğitim ve test veri setlerinin ayrılması (%80 / %20)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 2. Yapay Sinir Ağı Sınıfı
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.1):
+        self.learning_rate = learning_rate
+        self.weights1 = np.random.randn(input_size, hidden_size)
+        self.bias1 = np.zeros((1, hidden_size))
+        self.weights2 = np.random.randn(hidden_size, output_size)
+        self.bias2 = np.zeros((1, output_size))
+
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def sigmoid_deriv(self, x):
+        return x * (1 - x)
+
+    def softmax(self, x):
+        exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
+        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
+    def forward(self, X):
+        self.z1 = np.dot(X, self.weights1) + self.bias1
+        self.a1 = self.sigmoid(self.z1)
+        self.z2 = np.dot(self.a1, self.weights2) + self.bias2
+        self.a2 = self.softmax(self.z2)
+        return self.a2
+
+    def backward(self, X, y, output):
+        m = X.shape[0]
+        error_output = output - y
+        d_weights2 = np.dot(self.a1.T, error_output) / m
+        d_bias2 = np.sum(error_output, axis=0, keepdims=True) / m
+
+        error_hidden = np.dot(error_output, self.weights2.T) * self.sigmoid_deriv(self.a1)
+        d_weights1 = np.dot(X.T, error_hidden) / m
+        d_bias1 = np.sum(error_hidden, axis=0, keepdims=True) / m
+
+        self.weights2 -= self.learning_rate * d_weights2
+        self.bias2 -= self.learning_rate * d_bias2
+        self.weights1 -= self.learning_rate * d_weights1
+        self.bias1 -= self.learning_rate * d_bias1
+
+    def compute_loss(self, y_true, y_pred):
+        return -np.mean(np.sum(y_true * np.log(y_pred + 1e-8), axis=1))
+
+# 3. Modeli Eğitme
+nn = NeuralNetwork(input_size=4, hidden_size=8, output_size=3, learning_rate=0.1)
+epochs = 1000
+losses = []
+
+for epoch in range(epochs):
+    output = nn.forward(X_train)
+    loss = nn.compute_loss(y_train, output)
+    losses.append(loss)
+    nn.backward(X_train, y_train, output)
+
+# 4. Test Verisi ile Tahmin ve Doğruluk
+y_pred_probs = nn.forward(X_test)
+y_pred = np.argmax(y_pred_probs, axis=1)
+y_true = np.argmax(y_test, axis=1)
+
+acc = accuracy_score(y_true, y_pred)
+print("Test doğruluğu:", acc * 100, "%")
+
+# 5. Loss vs Epoch Grafiği
+plt.figure(figsize=(8, 5))
+plt.plot(losses, label="Loss")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.title("Loss vs Epoch")
+plt.legend()
+plt.show()
+
+# 6. Karmaşıklık Matrisi
+cm = confusion_matrix(y_true, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=encoder.classes_)
+disp.plot(cmap="Blues")
+plt.title("Confusion Matrix")
+plt.show()
