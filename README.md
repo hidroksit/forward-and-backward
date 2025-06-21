@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/ae483755-cc75-46b3-aa47-71c31d009c8b)Forward and Backward Propagation ile Yapay Sinir Ağı Eğitimi
+Forward and Backward Propagation ile Yapay Sinir Ağı Eğitimi
 Bu proje, YZM212 Makine Öğrenmesi dersi kapsamında, temel bir Yapay Sinir Ağı (ANN) modeli geliştirmek amacıyla hazırlanmıştır. Model, ileri (forward) ve geri (backward) yayılım algoritmaları kullanılarak sıfırdan oluşturulmuş, yalnızca NumPy gibi temel kütüphanelerle gerçekleştirilmiştir. Hazır makine öğrenmesi kütüphaneleri (scikit-learn, Keras, PyTorch vb.) kullanılmamıştır.
 
  Veri Seti ve Ön İşleme
